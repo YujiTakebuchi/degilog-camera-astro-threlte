@@ -1,0 +1,29 @@
+{
+  "name": "astro-ssr",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev --host",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.5.10",
+    "@astrojs/cloudflare": "^10.0.2",
+    "@astrojs/svelte": "^5.3.0",
+    "@threlte/core": "^7.3.0",
+    "@types/three": "^0.163.0",
+    "astro": "^4.5.12",
+    "buffer": "^6.0.3",
+    "lil-gui": "^0.19.2",
+    "svelte": "^4.2.12",
+    "three": "^0.163.0",
+    "typescript": "^5.4.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-basic-ssl": "^1.1.0",
+    "sass": "^1.74.1"
+  }
+}

@@ -1,0 +1,47 @@
+---
+import CameraSensor from "./CameraSensor.svelte";
+import CameraFinder from "./CameraFinder.svelte";
+import CameraUserInterface from "./CameraUserInterface.svelte";
+import CameraFilterThrelte from "./CameraFilterThrelte.svelte";
+
+let canvasFinder: HTMLCanvasElement;
+let canvasFilter: HTMLCanvasElement;
+
+---
+<script src="/js/libs/opencv.js" is:inline />
+<div class="Camera">
+  <div class="Camera--content">
+    <div class="Camera--content__sensor">
+      <CameraSensor client:load>
+    </div>
+    <div class="Camera--content__finder">
+      <CameraFinder client:load />
+    </div>
+    <div class="Camera--content__ui">
+      <CameraUserInterface client:load />
+    </div>
+    <div class="Camera--content__filter">
+      <!-- <CameraFilter canvasFinder={canvasFinder} client:load /> -->
+      <CameraFilterThrelte client:only="svelte" />
+    </div>
+  </div>
+</div>
+
+<style lang="scss">
+  .Camera {
+    position: relative;
+    &--content {
+      &__sensor {
+        width: 0;
+        height: 0;
+        opacity: 0;
+        overflow: hidden;
+        pointer-events: none;
+      }
+      &__filter {
+        width: 300px;
+        height: 300px;
+      }
+    }
+  }
+</style>
