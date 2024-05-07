@@ -44,13 +44,15 @@ float hash31(vec3 p){
 }
 
 void main(){
+  float lightness = 0.4;
   float time=floor(60.*u_time);
-  vec2 p=(gl_FragCoord.xy*2.-u_resolution)/min(u_resolution.x,u_resolution.y);
+  vec2 p=(gl_FragCoord.xy*2.-u_resolution)/max(u_resolution.x,u_resolution.y);
   vec2 pos=p;
-  float noiseRoughness=1.8;
-  vec2 pRough=vec2(floor(pos.x/noiseRoughness),floor(pos.y/noiseRoughness));
+  float noiseRoughness=0.01;
+  vec2 pRough=vec2(floor(gl_FragCoord.x/noiseRoughness),floor(gl_FragCoord.y/noiseRoughness));
+  // vec2 pRough=vec2(floor(pos.x/noiseRoughness),floor(pos.y/noiseRoughness));
   // fragColor.rgb=vec3(1.,0.,0.);
-  // fragColor.rgb=vec3(hash31(vec3(pRough,time)));
-  fragColor.rgb=vec3(hash31(vec3(pos,time)));
-  fragColor.a=1.;
+  fragColor.rgb=vec3(hash31(vec3(pRough,time)) * lightness);
+  // fragColor.rgb=vec3(hash31(vec3(pos,time)));
+  fragColor.a=0.1;
 }

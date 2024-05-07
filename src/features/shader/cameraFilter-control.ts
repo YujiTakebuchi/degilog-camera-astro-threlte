@@ -65,7 +65,8 @@ export const initCameraFilter: FuncInitCameraFilter = ({ targetCanvas }) => {
   const uniforms: ObjectUniforms = {
     ratio: { value: renderParam.width / renderParam.height },
     u_resolution: {
-      value: new THREE.Vector2(renderParam.width, renderParam.height)
+      // value: new THREE.Vector2(renderParam.width, renderParam.height)
+      value: new THREE.Vector2(window.innerWidth, window.innerHeight);
     },
     u_time: { value: 1.0 },
   };

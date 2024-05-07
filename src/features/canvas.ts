@@ -56,8 +56,8 @@ export const updataCanvasEffectCamera = (props: PropsUpdataCanvasEffectCamera) =
     ctxEffectCanvasSrc.drawImage(props.sensor, posSensorCenter.x, posSensorCenter.y, props.sensor.clientWidth, props.sensor.clientHeight);
     ctxEffectCanvasDist.globalCompositeOperation = "source-over";
     ctxEffectCanvasDist.drawImage(props.canvasSrc, 0, 0);
+    ctxEffectCanvasDist.drawImage(props.canvasFilter, 0, 0);
     ctxEffectCanvasDist.globalCompositeOperation = "screen";
-    ctxEffectCanvasDist.drawImage(props.canvasFilter, -300, -300);
     ctxEffectCanvasDist.drawImage(props.effectHeart, (props.canvasDist.width / 2) - 32, (props.canvasDist.height / 2) - 31, 64, 62);
   }
   requestAnimationFrame(() => updataCanvasEffectCamera(props));

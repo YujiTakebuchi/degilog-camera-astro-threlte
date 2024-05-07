@@ -36,7 +36,7 @@
 <!-- Floor -->
 
 <T.Mesh>
-  <T.PlaneGeometry args={[2, 2]} />
+  <T.PlaneGeometry args={[8, 8]} />
   <T.ShaderMaterial
     {vertexShader}
     {fragmentShader}
