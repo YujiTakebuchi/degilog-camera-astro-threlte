@@ -1,4 +1,13 @@
 {
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": ["src/components/*"],
+      "@assets/*": ["src/assets/*"],
+      "@features/*": ["src/features/*"],
+      "@stores/*": ["src/components/stores/*"]
+    }
+  },
   "extends": "astro/tsconfigs/strict",
   "exclude": [
     "node_modules",

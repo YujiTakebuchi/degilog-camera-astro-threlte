@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { canvasFilter, canvasSrc, eleSensor, imgPathHeartGuide, imgPathHeartMask } from "./stores/CameraStore";
-  import { tick as tickOriginal } from "../features/util";
-  import { checkAndWarnIamgeIsDark, updataCanvasEffectCamera } from "../features/canvas";
+  import { canvasFilter, canvasSrc, eleSensor, imgPathHeartGuide, imgPathHeartMask } from "@stores/CameraStore";
+  import { tick as tickOriginal } from "@features/util";
+  import { checkAndWarnIamgeIsDark, updataCanvasEffectCamera } from "@features/canvas";
   import { Canvas } from "@threlte/core";
   import SceneCamera from "./scenes/SceneCamera.svelte";
 

@@ -2,11 +2,10 @@
   import { T, useTask } from '@threlte/core';
   import { Texture, VideoTexture } from 'three';
 
-  import videoBaseShader from '../../features/shader/glsl/videoBase.glsl?raw'
+  import videoBaseShader from "@features/shader/glsl/videoBase.glsl?raw"
 
-  import vertexShader from '../../features/shader/glsl/vertex.glsl?raw'
-  import { canvasSrc, eleSensor } from '../stores/CameraStore';
-  // import { canvasSrc, eleSensor } from './stores/CameraStore';
+  import vertexShader from "@features/shader/glsl/vertex.glsl?raw"
+  import { canvasSrc, eleSensor } from '@stores/CameraStore';
 
   let texture: Texture | undefined;
   $: {
