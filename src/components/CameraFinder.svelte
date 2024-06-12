@@ -3,10 +3,12 @@
   import { canvasFilter, canvasSrc, eleSensor, imgPathHeartGuide, imgPathHeartMask } from "./stores/CameraStore";
   import { tick as tickOriginal } from "../features/util";
   import { checkAndWarnIamgeIsDark, updataCanvasEffectCamera } from "../features/canvas";
+  import { Canvas } from "@threlte/core";
+  import SceneCamera from "./scenes/SceneCamera.svelte";
 
   const videoAspectRatio = 1 / 1;
 
-  let canvasFinder: HTMLCanvasElement | null = null;
+  let threlteCanvasFinder: Canvas;
 
   interface Props {
     canvasFinder: HTMLCanvasElement,
@@ -26,6 +28,8 @@
     props.canvasFinder.width = props.sensor.clientWidth;
     props.canvasFinder.height = props.sensor.clientWidth * videoAspectRatio;
 
+    canvasSrc.set(props.canvasFinder);
+
     // 暗さ判定処理開始
     tickOriginal({span: 200, callback: () => {
       const ctx = props.canvasSrc.getContext("2d");
@@ -42,13 +46,15 @@
   }
 
   onMount(async () => {
+    const canvasFinder: HTMLCanvasElement = threlteCanvasFinder.ctx.renderer.domElement;
     if ($eleSensor && canvasFinder) {
-      canvasSrc.set(document.createElement("canvas"));
       initEffectCamera({ canvasSrc: $canvasSrc, canvasFinder, imgGuidePath: $imgPathHeartGuide, sensor: $eleSensor, canvasFilter: $canvasFilter.$$.ctx[1] });
     }
   });
 </script>
 
 <div class="CameraFinder">
-  <canvas bind:this={canvasFinder} />
+  <Canvas bind:this={threlteCanvasFinder}>
+    <SceneCamera />
+  </Canvas>
 </div>

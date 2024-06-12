@@ -43,17 +43,10 @@ interface PropsUpdataCanvasEffectCamera {
  * エフェクトカメラのcanvas映像を更新し続ける関数
  */
 export const updataCanvasEffectCamera = (props: PropsUpdataCanvasEffectCamera) => {
-  const ctxEffectCanvasSrc = props.canvasSrc.getContext("2d");
   const ctxEffectCanvasDist = props.canvasDist.getContext("2d");
   
-  if (!ctxEffectCanvasSrc || !ctxEffectCanvasDist) {}
+  if (!ctxEffectCanvasDist) {}
   else {
-    const posSensorCenter = {
-      x: (props.canvasSrc.width / 2) - (props.sensor.clientWidth / 2),
-      y: (props.canvasSrc.height / 2) - (props.sensor.clientHeight / 2),
-    }
-    ctxEffectCanvasSrc.globalCompositeOperation = "source-over";
-    ctxEffectCanvasSrc.drawImage(props.sensor, posSensorCenter.x, posSensorCenter.y, props.sensor.clientWidth, props.sensor.clientHeight);
     ctxEffectCanvasDist.globalCompositeOperation = "source-over";
     ctxEffectCanvasDist.drawImage(props.canvasSrc, 0, 0);
     ctxEffectCanvasDist.drawImage(props.canvasFilter, 0, 0);

@@ -2,7 +2,7 @@ import { writable, type Writable } from 'svelte/store';
 
 // カメラパーツ要素
 export const eleSensor: Writable<HTMLVideoElement> | Writable<null> = writable(null);
-export const canvasSrc = writable(null);
+export const canvasSrc: Writable<HTMLCanvasElement> | Writable<null> = writable(null);
 export const canvasFilter = writable(null);
 
 // 映像データ

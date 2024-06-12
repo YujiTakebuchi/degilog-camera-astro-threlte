@@ -1,0 +1,160 @@
+precision mediump float;
+
+in vec2 vUv;
+uniform float u_time;
+uniform sampler2D u_tex;
+out vec4 fragColor;
+
+float e = 2.71828182846;
+
+vec3 rgb2hsv(vec3 c)
+{
+    vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+
+    float d = q.x - min(q.w, q.y);
+    float e = 1.0e-10;
+    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+}
+
+float rand(const vec2 co){
+  return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
+
+float veloCustomNoob (float x) {
+  float v = 1.459;
+  float exp = pow(e, cos(x * 34.0));
+  float normal = ((exp * sin(x)) + v) / (v * 2.0);
+  return normal;
+}
+
+vec3 invertColor(vec3 color) {
+  return 1.0 - color;
+}
+
+vec3 averageColor (vec3 src, vec3 av) {
+  return (src + av) / 2.0;
+}
+
+vec3 aveWSrcColor (vec3 src, vec3 av, float w) {
+  return ((src * (w + 1.0)) + av) / (2.0 + w);
+  // 検証用: 平均処理外してる
+  // return (src * (w + 1.0)) / (w + 2.0);
+}
+
+vec3 shiftTex(sampler2D texSampler, vec2 uvData, float velo) {
+  // float percent = 0.8;
+  float percent = velo;
+  float shift = percent * .01;
+
+  float r = texture( texSampler, uvData + vec2( shift, 0.0 ) ).r;
+  float g = texture( texSampler, uvData ).g;
+  float b = texture( texSampler, uvData - vec2( shift, 0.0 ) ).b;
+
+  vec3 color = vec3( r, g, b );
+
+  return color;
+}
+
+vec3 invertTex(sampler2D texSampler, vec2 uvData) {
+  vec4 tex = texture(texSampler, uvData);
+  float percent = 1.0;
+  vec3 color = tex.rgb;
+  vec3 invert = 1. - color;
+  
+  color = mix( color, invert, percent );
+  return color;
+}
+
+vec3 searchLightTex(sampler2D texSampler, vec2 uvData) {
+  vec4 tex = texture(texSampler, uvData);
+  float moz = abs(sin(u_time * 0.5));
+  // asuka用
+  // 顔平滑化・割とちょうどいい
+  // float moz = 0.31;
+  // 赤髪かわいい
+  // float moz = 0.34;
+  // 毒っぽい
+  // float moz = 0.4;
+  // サイケっぽい
+  // float moz = 0.45;
+  // 蛍光塗料が光ってる感じ
+  // float moz = 0.55;
+  vec3 color = tex.rgb;
+  color = floor(color / moz);
+  return color;
+}
+
+vec3 mosaiqueTex(sampler2D texSampler, vec2 uvData) {
+  float moz = abs(sin(u_time)) * 0.02;
+  if (moz > 0.0) {
+    uvData = floor(uvData / moz) * moz + (moz * 0.5);
+  }
+  vec4 tex = texture(texSampler, uvData);
+  vec3 color = tex.rgb;
+  return color;
+}
+
+vec3 yurayuraTex(sampler2D texSampler, vec2 uvData) {
+  float percent = 1.0;
+  float t = u_time * 6.0;
+  float amount = percent * 0.02;
+
+  vec2 uvOffset = vec2( cos( uvData.y * 20. + t ), sin( uvData.x * 10. - t ) ) * amount;
+
+  vec3 color = texture( texSampler, uvData + uvOffset ).rgb;
+  return color;
+}
+
+vec3 aveTex(sampler2D texSampler, vec2 uvData, vec3 aveColor) {
+  vec4 tex = texture(texSampler, uvData);
+  vec3 color = averageColor(averageColor(tex.rgb, aveColor), aveColor);
+  return color;
+}
+
+vec3 aveWSrcTex(sampler2D texSampler, vec2 uvData, vec3 aveColor) {
+  vec4 tex = texture(texSampler, uvData);
+  vec3 color = aveWSrcColor(tex.rgb, aveColor, -2.3);
+  return color;
+}
+
+vec3 moveShiftTex(sampler2D texSampler, vec2 uvData) {
+  float speed = 4.0;
+  // float velo = veloCustomNoob(u_time * speed);
+  // float velo = rand(uvData * u_time);
+  float velo = abs(1.0 * cos(cos(sin(u_time * 300.0) * 5.0) * 1.0));
+  vec3 color = shiftTex(texSampler, uvData, velo);
+  return color;
+}
+
+vec3 grayscale(sampler2D texSampler, vec2 uvData) {
+  vec4 tex = texture(texSampler, uvData);
+  vec3 hsv = rgb2hsv(tex.rgb);
+  vec3 color = ((hsv.x < 0.05 || hsv.x > 0.95) && hsv.y > 0.3) ? tex.rgb : vec3(dot(tex.rgb, vec3(0.299, 0.387, 0.114)));
+  // vec3 color = vec3(dot(tex.rgb, vec3(0.299, 0.387, 0.114)));
+  return color;
+}
+
+vec3 grayscaleRGBAve(sampler2D texSampler, vec2 uvData) {
+  vec4 tex = texture(texSampler, uvData);
+  vec3 hsv = rgb2hsv(tex.rgb);
+  vec3 color = ((hsv.x < 0.05 || hsv.x > 0.95) && hsv.y > 0.3) ? tex.rgb : vec3((tex.r * tex.g * tex.b) / 3.0);
+  return color;
+}
+
+void main(void) {
+  // fragColor = vec4(floor(vUv.x * 20.0) / 20.0, 0.0, floor(vUv.y * 20.0) / 20.0, 1.0);
+  // fragColor = texture(u_tex, vUv);
+  fragColor = vec4(invertTex(u_tex, vUv), 1.0);
+  // fragColor = vec4(shiftTex(u_tex, vUv, 0.5), 0.3);
+  // fragColor = vec4(searchLightTex(u_tex, vUv), 1.3);
+  // fragColor = vec4(mosaiqueTex(u_tex, vUv), 0.3);
+  // fragColor = vec4(yurayuraTex(u_tex, vUv), 1.0);
+  // fragColor = vec4(aveTex(u_tex, vUv, vec3(0.99, 0.99, 0.99)), 1.0);
+  // fragColor = vec4(aveWSrcTex(u_tex, vUv, vec3(0.55, 0.55, 0.99)), 1.0);
+  // fragColor = vec4(moveShiftTex(u_tex, vUv), 1.0);
+  // fragColor = vec4(aveWSrcColor(moveShiftTex(u_tex, vUv), vec3(0.2), 0.1), 1.0 );
+  // fragColor = vec4(grayscale(u_tex, vUv), 1.0);
+  // fragColor = vec4(grayscaleRGBAve(u_tex, vUv), 1.0);
+}
